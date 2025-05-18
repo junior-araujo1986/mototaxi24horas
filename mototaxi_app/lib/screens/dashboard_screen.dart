@@ -27,6 +27,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Bem-vindo, ${widget.cpf}'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
       ),
       body: GoogleMap(
         onMapCreated: _onMapCreated,

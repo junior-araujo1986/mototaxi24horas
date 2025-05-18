@@ -11,11 +11,6 @@ class ApiService {
       body: jsonEncode({'cpf': cpf, 'senha': senha}),
     );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return true;
-    } else {
-      return false;
-    }
+    return response.statusCode == 200;
   }
 }

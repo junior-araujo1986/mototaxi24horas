@@ -1,34 +1,23 @@
-// src/components/Map/PlaceSearch.jsx
 import React, { useState } from 'react';
-import { Autocomplete } from '@react-google-maps/api';
 
 export default function PlaceSearch({ onPlaceSelected }) {
-  const [autocomplete, setAutocomplete] = useState(null);
+  const [value, setValue] = useState('');
 
-  const onLoad = (auto) => {
-    setAutocomplete(auto);
-  };
-
-  const onPlaceChanged = () => {
-    if (autocomplete !== null) {
-      const place = autocomplete.getPlace();
-      if (place.geometry && place.geometry.location) {
-        onPlaceSelected({
-          address: place.formatted_address,
-          lat: place.geometry.location.lat(),
-          lng: place.geometry.location.lng(),
-        });
-      }
+  const handleChange = (e) => {
+    const newValue = e.target.value;
+    setValue(newValue);
+    if (onPlaceSelected) {
+      onPlaceSelected({ address: newValue });
     }
   };
 
   return (
-    <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-      <input
-        type="text"
-        placeholder="Digite um local"
-        className="w-full p-2 border rounded mb-4"
-      />
-    </Autocomplete>
+    <input
+      type="text"
+      value={value}
+      onChange={handleChange}
+      placeholder="Digite um local"
+      className="w-full p-2 border rounded mb-4"
+    />
   );
 }

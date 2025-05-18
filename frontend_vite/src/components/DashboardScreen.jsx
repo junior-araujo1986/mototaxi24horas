@@ -1,9 +1,8 @@
-// src/components/MotoristaDashboard.jsx
 import React, { useState } from 'react';
 import MapComponent from './Map/MapComponent';
 import PlaceSearch from './Map/PlaceSearch';
 
-export default function MotoristaDashboard() {
+export default function DashboardScreen() {
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
 

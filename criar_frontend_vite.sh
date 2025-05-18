@@ -1,25 +1,30 @@
 #!/bin/bash
 
-echo "🚀 Recriando frontend web do zero - Mototaxi 24 Horas"
+echo "🚀 Recriando estrutura web do zero - Mototaxi 24 Horas"
+
+# Pasta base
 cd ~/mototaxi24horas || { echo "❌ Pasta ~/mototaxi24horas não encontrada"; exit 1; }
 
 # Remover projetos antigos (se existirem)
 rm -rf frontend_vite node_modules package-lock.json
 
-# Criar novo projeto Vite + React
+# Criar novo projeto com Vite + React
+echo "🛠️ Criando novo projeto com Vite + React"
 npm create vite@latest frontend_vite --template react
 
 # Entrar na pasta do projeto
-cd frontend_vite || { echo "❌ Erro ao acessar frontend_vite"; exit 1; }
+cd frontend_vite || { echo "❌ Erro ao acessar a pasta do projeto"; exit 1; }
 
-# Instalar dependências
+# Instalar dependências mínimas
+echo "📦 Instalando dependências..."
 npm install
 
-# Adicionar Tailwind CSS (opcional mas recomendado)
+# Instalar Tailwind CSS (opcional mas recomendado)
+echo "🎨 Adicionando Tailwind CSS..."
 npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 
-# Configurar Tailwind
+# Atualizar configuração do Tailwind
 cat > tailwind.config.js << EOL
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -34,7 +39,7 @@ module.exports = {
 }
 EOL
 
-# Atualizar index.css para usar Tailwind
+# Atualizar index.css
 cat > src/index.css << EOL
 @tailwind base;
 @tailwind components;
@@ -44,13 +49,14 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f9fafb;
+  font-family: sans-serif;
 }
 EOL
 
 # Estrutura de pastas
-mkdir -p src/components/Map src/pages/context
+mkdir -p src/components/Map src/pages
 
-# Mapa básico para evitar erros
+# Componente MapComponent básico
 cat > src/components/Map/MapComponent.jsx << EOL
 import React from 'react';
 
@@ -63,7 +69,7 @@ export default function MapComponent() {
 }
 EOL
 
-# Campo de busca mockado
+# Componente PlaceSearch básico
 cat > src/components/Map/PlaceSearch.jsx << EOL
 import React, { useState } from 'react';
 
@@ -137,13 +143,13 @@ export default function Login() {
 }
 EOL
 
-# Dashboard com navegação
-cat > src/components/Dashboard.jsx << EOL
+# Tela Dashboard com mapa
+cat > src/components/DashboardScreen.jsx << EOL
 import React, { useState } from 'react';
 import MapComponent from './Map/MapComponent';
 import PlaceSearch from './Map/PlaceSearch';
 
-export default function Dashboard() {
+export default function DashboardScreen() {
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
 
@@ -159,18 +165,7 @@ export default function Dashboard() {
 
   return (
     <div className="p-6">
-      <header className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Bem-vindo!</h1>
-        <button
-          onClick={() => {
-            localStorage.removeItem('motorista');
-            window.location.href = '/';
-          }}
-          className="text-red-500 hover:text-red-700"
-        >
-          Sair
-        </button>
-      </header>
+      <h1 className="text-2xl font-bold mb-4">Solicitar Corrida</h1>
 
       <div className="mb-4">
         <label className="block mb-2 font-semibold">Origem:</label>
@@ -193,19 +188,19 @@ export default function Dashboard() {
 }
 EOL
 
-# App.jsx com rotas
+# Arquivo App.jsx com rotas
 cat > src/App.jsx << EOL
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
-import Dashboard from './components/Dashboard';
+import DashboardScreen from './components/DashboardScreen';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<DashboardScreen />} />
         <Route path="/" element={<Login />} />
       </Routes>
     </BrowserRouter>
@@ -225,15 +220,15 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
-);
 EOL
 
 # Instale roteamento
 npm install react-router-dom
 
-# Corrija vulnerabilidades
+# Corrija vulnerabilidades (atenção: pode atualizar pacotes quebrados)
+echo "🔧 Corrigindo vulnerabilidades..."
 npm audit fix --force
 
-# Rode o projeto
+# Reinicie servidor do Vite
 echo "✅ Projeto criado com sucesso!"
 echo "📲 Para rodar: cd ~/mototaxi24horas/frontend_vite && npm run dev"

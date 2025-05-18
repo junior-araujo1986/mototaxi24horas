@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -8,7 +9,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final cpfController = TextEditingController();
 
-  void _fazerLogin(context) {
+  void _fazerLogin() {
     if (cpfController.text.isNotEmpty) {
       Navigator.pushReplacement(
         context,
@@ -39,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () => _fazerLogin(context),
+              onPressed: _fazerLogin,
               child: Text('Entrar'),
             )
           ],
