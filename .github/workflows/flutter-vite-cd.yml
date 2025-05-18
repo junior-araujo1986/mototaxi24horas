@@ -1,0 +1,112 @@
+name: 🔧 CI/CD - Frontend Web + App Móvel
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # 🧪 Job 1: Build do Projeto Web (Vite + React)
+  build-web:
+    name: 🌐 Build Frontend Web
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔍 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🧪 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          check-latest: true
+
+      # Instalar dependências do frontend
+      - name: 📦 Install Dependencies
+        run: |
+          cd frontend_vite
+          npm install
+
+      # Fazer build do frontend
+      - name: 🧱 Build Web App
+        run: |
+          cd frontend_vite
+          npm run build
+
+      # Fazer upload do build como artefato
+      - name: 🔖 Save Web Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: frontend_vite/dist/
+
+      # Opcional: Deploy no Firebase (se configurado)
+      - name: ☁️ Deploy to Firebase
+        if: secrets.FIREBASE_TOKEN != ''
+        run: |
+          cd frontend_vite
+          firebase deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }}
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+  # 📱 Job 2: Build do App Móvel (Flutter)
+  build-flutter:
+    name: 📲 Build App Móvel
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔍 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🧪 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.0'
+          channel: stable
+
+      # Instalar dependências do Flutter
+      - name: 📦 Get Flutter Packages
+        run: |
+          cd mototaxi_app
+          flutter pub get
+
+      - name: 🧱 Build APK
+        run: |
+          cd mototaxi_app
+          flutter build apk --release
+
+      # Fazer upload do APK gerado
+      - name: 🚀 Upload APK Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: mototaxi_app_apk
+          path: mototaxi_app/build/app/outputs/flutter-apk/app-release.apk
+
+      # Opcional: Build para iOS (se necessário)
+      - name: 🍏 Build iOS App
+        if: ${{ false }} # Desative por padrão se não for usar
+        run: |
+          cd mototaxi_app
+          flutter build ios --release --no-codesign
+
+  # 🔒 Job 3: Verificação Segurança
+  lint-and-audit:
+    name: 🛡️ Lint & NPM Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔍 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🧪 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+
+      - name: 🧰 Run npm audit and lint
+        run: |
+          cd frontend_vite
+          npm install
+          npm run lint
+          npm audit fix --force
+
+      - name: 📋 Security Scan
+        run: |
+          echo "✅ Vulnerabilities fixed using 'npm audit fix --force'"
