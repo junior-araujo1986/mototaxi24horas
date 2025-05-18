@@ -1,0 +1,14 @@
+# Node.js
+node_modules/
+package-lock.json
+
+# Flutter
+.dart_tool/
+.build/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+/pubspec.lock
+/build/
+android/app/src/main/AndroidManifest.xml
+ios/Flutter/AppFrameworkInfo.plist
