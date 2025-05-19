@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import MapComponent from './Map/MapComponent';
 import PlaceSearch from './Map/PlaceSearch';
 
-export default function DashboardScreen() {
+export default function MotoristaDashboard() {
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
 
   const handleOriginSelect = (place) => {
-    console.log('Origem:', place);
+    console.log('Origem selecionada:', place);
     setOrigin(place);
   };
 
   const handleDestinationSelect = (place) => {
-    console.log('Destino:', place);
+    console.log('Destino selecionado:', place);
     setDestination(place);
   };
 

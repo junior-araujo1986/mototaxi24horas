@@ -1,0 +1,30 @@
+android {
+    namespace "com.example.mototaxi_app"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.example.mototaxi_app"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('../key.jks')
+            storePassword 'mototaxi_app_key'
+            keyAlias 'mototaxi_app'
+            keyPassword 'mototaxi_app_key'
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
